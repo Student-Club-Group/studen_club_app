@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "640593720794",
+    "project_id": "student-club-1b550",
+    "storage_bucket": "student-club-1b550.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640593720794:android:0cf3a16bfd4c653a9cfce3",
+        "android_client_info": {
+          "package_name": "com.example.student_club"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640593720794-li18p3s1grhjj5kacupsbgebin3d8spa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPbsQSrKQ-aCuZJiEzKaieEljETF4-ADs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640593720794-li18p3s1grhjj5kacupsbgebin3d8spa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

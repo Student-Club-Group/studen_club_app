@@ -1,12 +1,7 @@
 class Student {
-  int id;
+  String id;
   String? imageUrl;
   String name;
-  String stId;
 
-  Student(
-      {required this.id,
-      required this.name,
-      required this.stId,
-      this.imageUrl});
+  Student({required this.id, required this.name, this.imageUrl});
 }

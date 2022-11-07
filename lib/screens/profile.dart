@@ -11,22 +11,58 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            CircleAvatar(
-              child: Image.network(
-                student.imageUrl ??
-                    'https://media.istockphoto.com/id/1300845620/es/vector/icono-de-usuario-plano-aislado-sobre-fondo-blanco-s%C3%ADmbolo-de-usuario-ilustraci%C3%B3n-vectorial.jpg?s=612x612&w=is&k=20&c=zPM_oUwye9se11xNJdiJtq6iCxZ97z7Lpa2GUf1p8GU=',
+        Container(
+          width: double.infinity,
+          height: 60,
+          color: Theme.of(context).backgroundColor,
+          child: Center(
+              child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+              const Spacer(
+                flex: 4,
               ),
-            ),
-            Text(student.name),
-            const Spacer(),
-            TextButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                child: Text('Sign Out'))
-          ],
+              Text(
+                'Profile',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1!
+                    .copyWith(color: Colors.white),
+              ),
+              const Spacer(
+                flex: 3,
+              ),
+              TextButton(
+                  onPressed: () => FirebaseAuth.instance.signOut(),
+                  child: Text(
+                    'Sign Out',
+                    style: Theme.of(context).textTheme.headline3,
+                  ))
+            ],
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.green[50],
+                radius: 40,
+                child: Image.asset(
+                  student.imageUrl ?? 'assets/images/man.png',
+                  width: 60,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Text(student.name),
+              const Spacer(),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -48,6 +84,21 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(
+          height: 30,
+        ),
+        const Text('Posts'),
+        Expanded(
+          child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: ((context, index) {
+                return ListTile(
+                  title: Text('Post'),
+                  subtitle: Text(
+                      'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
+                );
+              })),
+        )
       ],
     );
   }

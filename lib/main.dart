@@ -20,6 +20,16 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        fontFamily: 'Roboto',
+        textTheme: const TextTheme(
+          headline1: TextStyle(fontSize: 18.0),
+          headline2: TextStyle(fontSize: 18.0),
+          headline3: TextStyle(fontSize: 15.0),
+          headline6: TextStyle(fontSize: 13.0, fontStyle: FontStyle.italic),
+          bodyText1: TextStyle(
+              fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
+          bodyText2: TextStyle(fontSize: 13.0),
+        ),
       ),
       home: const AuthScreen(),
     );

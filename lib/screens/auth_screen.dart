@@ -10,23 +10,22 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Club'),
+    return SafeArea(
+      child: Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                Student student = Student(
+                    id: snapshot.data!.uid, name: snapshot.data!.email!);
+                return Profile(
+                  student: student,
+                );
+              } else {
+                return const RegisterScreen();
+              }
+            }),
       ),
-      body: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Student student =
-                  Student(id: snapshot.data!.uid, name: snapshot.data!.email!);
-              return Profile(
-                student: student,
-              );
-            } else {
-              return const RegisterScreen();
-            }
-          }),
     );
   }
 }

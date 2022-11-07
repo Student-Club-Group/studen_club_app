@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,12 +16,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwdController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  final String signInText = 'Already have an account ?';
-  final String signUpText = 'Don\'t have an account ?';
-  bool isSigningIn = false;
+
+  final String signInText = 'Already have an account ? ';
+  final String signUpText = 'No account ? ';
+  bool isSigningIn = true;
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle headline3 = Theme.of(context)
+        .textTheme
+        .headline3!
+        .copyWith(color: Colors.grey[700]);
+    final TextStyle bodyText2 = Theme.of(context).textTheme.bodyText2!;
     String authSigningState = isSigningIn ? signInText : signUpText;
     return SingleChildScrollView(
       child: Container(
@@ -29,19 +36,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 50),
+              Image.asset('assets/images/cooperation2.png', height: 150),
+              const SizedBox(height: 15),
+              Text(
+                'Student Club',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4!
+                    .copyWith(color: Colors.blueGrey[600]),
+              ),
+              const SizedBox(height: 50),
               isSigningIn
                   ? const SizedBox()
                   : TextFormField(
-                      decoration:
-                          const InputDecoration(hintText: 'Input Your Name'),
+                      decoration: InputDecoration(
+                        border: const UnderlineInputBorder(),
+                        labelText: 'Enter your name',
+                        labelStyle: headline3,
+                      ),
                       controller: nameController,
                     ),
               TextFormField(
-                decoration: const InputDecoration(hintText: 'Input Your Email'),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  labelText: 'Input Your E-mail',
+                  labelStyle: headline3,
+                ),
                 controller: emailController,
               ),
               TextFormField(
-                decoration: const InputDecoration(hintText: 'Enter A password'),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  labelText: 'Enter A password',
+                  labelStyle: headline3,
+                ),
                 controller: passwdController,
               ),
               const SizedBox(
@@ -58,14 +87,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Text(isSigningIn ? 'Sign In' : 'Sign Up'),
               ),
               const SizedBox(height: 20),
-              Text(authSigningState),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isSigningIn = !isSigningIn;
-                  });
-                },
-                child: Text(isSigningIn ? 'Register' : 'Log In'),
+              // Text(authSigningState),
+              RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: [
+                    TextSpan(text: authSigningState),
+                    TextSpan(
+                        text: isSigningIn ? ' Log In' : ' Sign Up',
+                        style: const TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            setState(() {
+                              isSigningIn = !isSigningIn;
+                            });
+                          }),
+                  ],
+                ),
               ),
             ],
           ),
@@ -78,13 +116,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Center(
+      builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
     );
     try {
-      UserCredential user =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwdController.text.trim(),
       );
@@ -103,8 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
     try {
-      UserCredential user =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwdController.text.trim(),
       );

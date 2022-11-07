@@ -18,9 +18,7 @@ class AuthScreen extends StatelessWidget {
               if (snapshot.hasData) {
                 Student student = Student(
                     id: snapshot.data!.uid, name: snapshot.data!.email!);
-                return Profile(
-                  student: student,
-                );
+                return Profile(student: student);
               } else {
                 return const RegisterScreen();
               }

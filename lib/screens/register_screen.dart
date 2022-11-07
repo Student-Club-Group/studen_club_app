@@ -19,6 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final String signInText = 'Already have an account ? ';
   final String signUpText = 'No account ? ';
+
   bool isSigningIn = true;
 
   @override
@@ -27,8 +28,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         .textTheme
         .headline3!
         .copyWith(color: Colors.grey[700]);
-    final TextStyle bodyText2 = Theme.of(context).textTheme.bodyText2!;
-    String authSigningState = isSigningIn ? signInText : signUpText;
+
+    String authSigningState = isSigningIn ? signUpText : signInText;
+
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(20.0),
@@ -94,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     TextSpan(text: authSigningState),
                     TextSpan(
-                        text: isSigningIn ? ' Log In' : ' Sign Up',
+                        text: isSigningIn ? ' Sign Up' : ' Log In',
                         style: const TextStyle(color: Colors.blue),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {

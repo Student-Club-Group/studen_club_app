@@ -16,31 +16,33 @@ class Profile extends StatelessWidget {
           height: 60,
           color: Theme.of(context).backgroundColor,
           child: Center(
-              child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
-              const Spacer(
-                flex: 4,
-              ),
-              Text(
-                'Profile',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1!
-                    .copyWith(color: Colors.white),
-              ),
-              const Spacer(
-                flex: 3,
-              ),
-              TextButton(
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+                const Spacer(
+                  flex: 4,
+                ),
+                Text(
+                  'Profile',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(color: Colors.white),
+                ),
+                const Spacer(
+                  flex: 3,
+                ),
+                TextButton(
                   onPressed: () => FirebaseAuth.instance.signOut(),
                   child: Text(
                     'Sign Out',
                     style: Theme.of(context).textTheme.headline3,
-                  ))
-            ],
-          )),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
@@ -90,15 +92,16 @@ class Profile extends StatelessWidget {
         const Text('Posts'),
         Expanded(
           child: ListView.builder(
-              itemCount: 30,
-              itemBuilder: ((context, index) {
-                return ListTile(
-                  title: Text('Post'),
-                  subtitle: Text(
-                      'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
-                );
-              })),
-        )
+            itemCount: 30,
+            itemBuilder: ((context, index) {
+              return const ListTile(
+                title: Text('Post'),
+                subtitle: Text(
+                    'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
+              );
+            }),
+          ),
+        ),
       ],
     );
   }

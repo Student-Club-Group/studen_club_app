@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:student_club/screens/profile.dart';
 
 import '../models/student.dart';
+import 'clubs_screen.dart';
 import 'register_screen.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -18,7 +19,9 @@ class AuthScreen extends StatelessWidget {
               if (snapshot.hasData) {
                 Student student = Student(
                     id: snapshot.data!.uid, name: snapshot.data!.email!);
-                return Profile(student: student);
+                return ClubsScreen(
+                  student: student,
+                );
               } else {
                 return const RegisterScreen();
               }

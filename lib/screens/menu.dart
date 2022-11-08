@@ -82,7 +82,6 @@ class SlideMenu extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context).pop();
                         Navigator.of(context).pushReplacement(PageRouteBuilder(
                           pageBuilder: (context, _, __) =>
                               Profile(student: student),

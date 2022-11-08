@@ -40,7 +40,10 @@ class Profile extends StatelessWidget {
                       flex: 3,
                     ),
                     TextButton(
-                      onPressed: () => FirebaseAuth.instance.signOut(),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        FirebaseAuth.instance.signOut();
+                      },
                       child: Text(
                         'Sign Out',
                         style: Theme.of(context).textTheme.headline3,

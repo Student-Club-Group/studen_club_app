@@ -9,7 +9,7 @@ void main() async {
 }
 
 //this is magdi from the other side
-
+//this is magdi again
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {

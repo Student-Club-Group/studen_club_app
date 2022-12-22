@@ -8,6 +8,8 @@ void main() async {
   runApp(const MyApp());
 }
 
+//this is magdi from the other side
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {

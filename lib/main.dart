@@ -13,20 +13,12 @@ void main() async {
   ], child: const MyApp()));
 }
 
-//this is magdi from the other side
-//this is magdi again
-//third comment to pr 
-// this is from joe
-
-final navigatorKey = GlobalKey<NavigatorState>();
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey,
       title: 'Student Club',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,

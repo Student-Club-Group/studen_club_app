@@ -4,12 +4,10 @@ import '../models/student.dart';
 import '../screens/menu.dart';
 
 class MyRoutes {
-  Route createSlidingMenuRoute(Student student) {
+  Route createSlidingMenuRoute() {
     return PageRouteBuilder(
       opaque: false,
-      pageBuilder: (context, animation, __) => SlideMenu(
-        student: student,
-      ),
+      pageBuilder: (context, animation, __) => SlideMenu(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(-1.0, 0.0);
         const end = Offset.zero;

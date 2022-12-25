@@ -1,11 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:student_club/screens/auth_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'models/student_provider.dart';
+import 'screens/auth_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => StudentProvider()),
+  ], child: const MyApp()));
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -31,7 +36,13 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(fontSize: 13.0),
         ),
       ),
-      home: const AuthScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const AuthScreen(),
+        // registerScreen: (context) => const RegisterScreen(),
+        // ClubsScreen.routeName :(context) => const ClubsScreen(),
+      },
+      // home: const AuthScreen(),
     );
   }
 }

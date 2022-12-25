@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:student_club/screens/clubs_screen.dart';
-import 'package:student_club/screens/profile.dart';
+//TODO : To be removed
 
-import '../models/student.dart';
+import 'package:flutter/material.dart';
+
+import 'profile.dart';
 
 class SlideMenu extends StatelessWidget {
-  final Student student;
   const SlideMenu({
-    required this.student,
     super.key,
   });
 
@@ -41,23 +39,25 @@ class SlideMenu extends StatelessWidget {
                           height: 60,
                         ),
                         const Spacer(),
-                        Text('Student Club',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1!
-                                .copyWith(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                        Text(
+                          'Student Club',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1!
+                              .copyWith(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
                         const Spacer(),
                       ],
                     ),
-                    Divider(),
+                    const Divider(),
                     const Spacer(),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(PageRouteBuilder(
-                          pageBuilder: (context, _, __) =>
-                              ClubsScreen(student: student),
-                        ));
+                        // Navigator.of(context).pushReplacement(PageRouteBuilder(
+                        //   pageBuilder: (context, _, __) =>
+                        //       ClubsScreen(),
+                        // ));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -83,8 +83,7 @@ class SlideMenu extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(PageRouteBuilder(
-                          pageBuilder: (context, _, __) =>
-                              Profile(student: student),
+                          pageBuilder: (context, _, __) => Profile(),
                         ));
                       },
                       child: Row(

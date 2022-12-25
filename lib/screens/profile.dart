@@ -1,142 +1,107 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/student.dart';
-import '../services/routes.dart';
+import '../widgets/my_app_bar.dart';
+import '../models/student_provider.dart';
 
 class Profile extends StatelessWidget {
-  final Student student;
-  const Profile({super.key, required this.student});
+  const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    StudentProvider studentProvider = Provider.of<StudentProvider>(context);
+
+    return Column(
+      children: [
+        const MyAppBar(
+          title: 'Profile',
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.green[50],
+                radius: 40,
+                child: Image.asset(
+                  studentProvider.student!.imageUrl ?? 'assets/images/man.png',
+                  width: 60,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Text(studentProvider.student!.name),
+              const Spacer(),
+              IconButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  icon: const Icon(Icons.logout_rounded))
+            ],
+          ),
+        ),
+        const Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: double.infinity,
-              height: 60,
-              color: Theme.of(context).backgroundColor,
-              child: Center(
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () => Navigator.of(context)
-                            .push(MyRoutes().createSlidingMenuRoute(student)),
-                        icon: const Icon(Icons.menu)),
-                    const Spacer(
-                      flex: 4,
-                    ),
-                    Text(
-                      'Profile',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1!
-                          .copyWith(color: Colors.white),
-                    ),
-                    const Spacer(
-                      flex: 3,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FirebaseAuth.instance.signOut();
-                      },
-                      child: Text(
-                        'Sign Out',
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.green[50],
-                    radius: 40,
-                    child: Image.asset(
-                      student.imageUrl ?? 'assets/images/man.png',
-                      width: 60,
-                      fit: BoxFit.scaleDown,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Text(student.name),
-                  const Spacer(),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
-                ],
-              ),
-            ),
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                Column(
-                  children: [
-                    Text(
-                      'Clubs',
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Text(
-                      '15',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  ],
+                Text(
+                  'Clubs',
+                  style: Theme.of(context).textTheme.headline1,
                 ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Posts',
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Text(
-                      '30',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  ],
+                Text(
+                  '15',
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
               ],
             ),
-            Divider(),
             const SizedBox(
-              height: 30,
+              width: 50,
             ),
-            Text(
-              'Posts',
-              style:
-                  Theme.of(context).textTheme.headline3?.copyWith(fontSize: 22),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 30,
-                itemBuilder: ((context, index) {
-                  return const Card(
-                    child: ListTile(
-                      title: Text('Post'),
-                      subtitle: Text(
-                          'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
-                    ),
-                  );
-                }),
-              ),
+            Column(
+              children: [
+                Text(
+                  'Posts',
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                Text(
+                  '30',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              ],
             ),
           ],
         ),
-      ),
+        const Divider(),
+        const SizedBox(
+          height: 30,
+        ),
+        Text(
+          'Posts',
+          style: Theme.of(context).textTheme.headline3?.copyWith(fontSize: 22),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 30,
+            itemBuilder: ((context, index) {
+              return const Card(
+                child: ListTile(
+                  title: Text('Post'),
+                  subtitle: Text(
+                      'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 }

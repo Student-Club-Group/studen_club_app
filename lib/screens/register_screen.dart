@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
-
 import 'package:flutter/material.dart';
-
-import '../main.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+  static const routeName = '/registerScreen';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -31,97 +29,103 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     String authSigningState = isSigningIn ? signUpText : signInText;
 
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              Image.asset('assets/images/cooperation2.png', height: 150),
-              const SizedBox(height: 15),
-              Text(
-                'Student Club',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4!
-                    .copyWith(color: Colors.blueGrey[600]),
-              ),
-              const SizedBox(height: 50),
-              isSigningIn
-                  ? const SizedBox()
-                  : TextFormField(
-                      decoration: InputDecoration(
-                        border: const UnderlineInputBorder(),
-                        labelText: 'Enter your name',
-                        labelStyle: headline3,
-                      ),
-                      controller: nameController,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  Image.asset('assets/images/cooperation2.png', height: 150),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Student Club',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4!
+                        .copyWith(color: Colors.blueGrey[600]),
+                  ),
+                  const SizedBox(height: 50),
+                  isSigningIn
+                      ? const SizedBox()
+                      : TextFormField(
+                          decoration: InputDecoration(
+                            border: const UnderlineInputBorder(),
+                            labelText: 'Enter your name',
+                            labelStyle: headline3,
+                          ),
+                          controller: nameController,
+                        ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: const UnderlineInputBorder(),
+                      labelText: 'Input Your E-mail',
+                      labelStyle: headline3,
                     ),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: const UnderlineInputBorder(),
-                  labelText: 'Input Your E-mail',
-                  labelStyle: headline3,
-                ),
-                controller: emailController,
+                    controller: emailController,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: const UnderlineInputBorder(),
+                      labelText: 'Enter A password',
+                      labelStyle: headline3,
+                    ),
+                    controller: passwdController,
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (isSigningIn) {
+                        signIn();
+                      } else {
+                        signUp();
+                      }
+                    },
+                    child: Text(isSigningIn ? 'Sign In' : 'Sign Up'),
+                  ),
+                  const SizedBox(height: 20),
+                  // Text(authSigningState),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(text: authSigningState),
+                        TextSpan(
+                            text: isSigningIn ? ' Sign Up' : ' Log In',
+                            style: const TextStyle(color: Colors.blue),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                setState(() {
+                                  isSigningIn = !isSigningIn;
+                                });
+                              }),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: const UnderlineInputBorder(),
-                  labelText: 'Enter A password',
-                  labelStyle: headline3,
-                ),
-                controller: passwdController,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextButton(
-                onPressed: () {
-                  if (isSigningIn) {
-                    signIn();
-                  } else {
-                    signUp();
-                  }
-                },
-                child: Text(isSigningIn ? 'Sign In' : 'Sign Up'),
-              ),
-              const SizedBox(height: 20),
-              // Text(authSigningState),
-              RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: [
-                    TextSpan(text: authSigningState),
-                    TextSpan(
-                        text: isSigningIn ? ' Sign Up' : ' Log In',
-                        style: const TextStyle(color: Colors.blue),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            setState(() {
-                              isSigningIn = !isSigningIn;
-                            });
-                          }),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  // TODO : Separate business logic from UI
+
   Future? signUp() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Center(
+    //     child: CircularProgressIndicator(),
+    //   ),
+    // );
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -130,17 +134,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
   Future? signIn() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const Center(
+    //     child: CircularProgressIndicator(),
+    //   ),
+    // );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -149,6 +153,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

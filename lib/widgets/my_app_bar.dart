@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget {
   final String title;
-  const MyAppBar({super.key, required this.title});
+  final Widget? trailing;
+  final Widget? leading;
+  const MyAppBar({super.key, required this.title, this.trailing, this.leading});
 
   @override
   Widget build(BuildContext context) {
+    int firstFlexValue = 1;
+    int secondFlexValue = 1;
+    if (leading != null && trailing == null) {
+      firstFlexValue = 2;
+      secondFlexValue = 3;
+    } else if (leading == null && trailing != null) {
+      firstFlexValue = 3;
+      secondFlexValue = 2;
+    }
     return Container(
       width: double.infinity,
       height: 60,
@@ -14,8 +25,9 @@ class MyAppBar extends StatelessWidget {
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Spacer(
-              flex: 2,
+            leading ?? Container(),
+            Spacer(
+              flex: firstFlexValue,
             ),
             Text(
               title,
@@ -24,9 +36,10 @@ class MyAppBar extends StatelessWidget {
                   .headline1!
                   .copyWith(color: Colors.white),
             ),
-            const Spacer(
-              flex: 2,
+            Spacer(
+              flex: secondFlexValue,
             ),
+            trailing ?? Container(),
           ],
         ),
       ),

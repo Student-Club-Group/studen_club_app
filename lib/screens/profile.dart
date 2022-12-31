@@ -2,16 +2,47 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/post.dart';
 import '../widgets/my_app_bar.dart';
 import '../models/student_provider.dart';
+import '../widgets/post_widget.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
+  static List<Post> posts = [
+    Post(
+      title: 'Chess Tournament',
+      announcement:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
+      authorId: 0,
+      clubId: 0,
+      dateTime: DateTime.now(),
+    ),
+    Post(
+      title: 'Football Match',
+      announcement:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
+      authorId: 0,
+      clubId: 0,
+      dateTime: DateTime.now(),
+    ),
+    Post(
+      title: 'Poem Concert',
+      announcement:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
+      authorId: 0,
+      clubId: 0,
+      dateTime: DateTime.now(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     StudentProvider studentProvider = Provider.of<StudentProvider>(context);
-
+    if (studentProvider.student == null) {
+      print('fetching');
+      studentProvider.fetchStudent();
+    }
     return Column(
       children: [
         const MyAppBar(
@@ -33,7 +64,25 @@ class Profile extends StatelessWidget {
               const SizedBox(
                 width: 20,
               ),
-              Text(studentProvider.student!.name),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    studentProvider.student!.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.blueGrey[700]),
+                  ),
+                  const SizedBox(height: 5.0),
+                  Text(
+                    studentProvider.student!.email,
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                        color: Colors.blueGrey[700],
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
               const Spacer(),
               IconButton(
                   onPressed: () {
@@ -65,7 +114,7 @@ class Profile extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  'Posts',
+                  'Liked Posts',
                   style: Theme.of(context).textTheme.headline1,
                 ),
                 Text(
@@ -81,27 +130,29 @@ class Profile extends StatelessWidget {
           height: 30,
         ),
         Text(
-          'Posts',
+          'Liked Posts',
           style: Theme.of(context).textTheme.headline3?.copyWith(fontSize: 22),
         ),
         const SizedBox(
           height: 20,
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: 30,
-            itemBuilder: ((context, index) {
-              return const Card(
-                child: ListTile(
-                  title: Text('Post'),
-                  subtitle: Text(
-                      'Magna exercitation sit exercitation culpa cupidatat est pariatur eiusmod. Eiusmod anim in Lorem ad et proident dolore duis.'),
-                ),
-              );
-            }),
-          ),
+          child: ListView(children: postsList()),
         ),
       ],
     );
+  }
+
+  List<Widget> postsList() {
+    return posts.map((post) {
+      return PostWidget(
+        title: post.title,
+        announcement: post.announcement,
+        clubName: 'Club Name',
+        author: 'Youssef Darahem',
+        dateTime: post.dateTime,
+        postState: post.state,
+      );
+    }).toList();
   }
 }

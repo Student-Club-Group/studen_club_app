@@ -120,6 +120,7 @@ class Profile extends StatelessWidget {
                         style: Theme.of(context).textTheme.headline1,
                       ),
                       Text(
+                        //BUG: *potential bug as it might not update locally
                         studentProvider.student!.clubs!.length.toString(),
                         style: Theme.of(context).textTheme.bodyText2,
                       ),

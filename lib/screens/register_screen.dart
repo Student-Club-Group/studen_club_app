@@ -126,8 +126,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Student student = Student(
                                 name: nameController.text.trim(),
                                 email: emailController.text.trim());
-                            fireStoreCloud.addUser(student);
-                            studentProvider.updateStudent(student);
+                            studentProvider.addUser(student);
+                            // studentProvider.updateStudent(student);
                           }
                         }
                       },

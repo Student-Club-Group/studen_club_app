@@ -58,6 +58,28 @@ class Club {
     posts!.add(postId);
   }
 
+  addMember(String memberId) {
+    if (members == null) {
+      members = [memberId];
+    } else {
+      members!.add(memberId);
+    }
+  }
+
+  removeMember(String memberId) {
+    members!.remove(memberId);
+  }
+
+  bool isMember(String userId) {
+    if (members == null) return false;
+    return members!.contains(userId);
+  }
+
+  bool isOwner(String userId) {
+    if (owners == null) return false;
+    return owners!.contains(userId);
+  }
+
   factory Club.fromJson(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,

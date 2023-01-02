@@ -69,9 +69,9 @@ class _AddClubScreenState extends State<AddClubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    StudentProvider _studentProvider = Provider.of<StudentProvider>(context);
-    if (_studentProvider.student == null) {
-      _studentProvider.fetchStudent();
+    StudentProvider studentProvider = Provider.of<StudentProvider>(context);
+    if (studentProvider.student == null) {
+      studentProvider.fetchStudent();
     }
     TextEditingController clubNameController = TextEditingController();
     TextEditingController clubDescriptionController = TextEditingController();
@@ -184,7 +184,7 @@ class _AddClubScreenState extends State<AddClubScreen> {
                         // style: ButtonStyle(
                         //     backgroundColor: MaterialStateProperty.all(
                         //         Colors.blueGrey.shade600)),
-                        onPressed: () {
+                        onPressed: () async {
                           if (clubNameController.text.isNotEmpty &&
                               clubDescriptionController.text.isNotEmpty) {
                             Club newClub = Club(
@@ -193,13 +193,15 @@ class _AddClubScreenState extends State<AddClubScreen> {
                               type: ClubType.values.firstWhere((type) =>
                                   type.name.toString() ==
                                   clubType.toLowerCase()),
-                              owners: [_studentProvider.student!.id!],
+                              owners: [studentProvider.student!.id!],
                               members: [],
                               posts: [],
                             );
                             print(newClub);
                             try {
-                              widget.clubRef.add(newClub);
+                              var result = await widget.clubRef.add(newClub);
+                              studentProvider.student!.addClub(result.id);
+                              await studentProvider.updateStudent();
                             } catch (e) {
                               print(e);
                             }

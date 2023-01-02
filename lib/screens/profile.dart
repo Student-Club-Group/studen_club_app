@@ -47,6 +47,7 @@ class Profile extends StatelessWidget {
     // TODO : seperate to loading and data widgets
 
     StudentProvider studentProvider = Provider.of<StudentProvider>(context);
+
     if (studentProvider.student == null) {
       studentProvider.fetchStudent();
     }

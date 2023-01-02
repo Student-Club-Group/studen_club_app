@@ -20,6 +20,25 @@ class Student {
       this.likedPosts,
       this.id});
 
+  addClub(String clubId) {
+    if (clubs == null) {
+      clubs = [clubId];
+    } else {
+      clubs!.add(clubId);
+    }
+  }
+
+  removeClub(String clubId) {
+    if (clubs == null) {
+      print('Error : you are trying Club with ID : $clubId but clubs are null');
+    } else if (clubs!.isEmpty) {
+      print(
+          'Error : you are trying Club with ID : $clubId but clubs are Empty');
+    } else {
+      clubs!.remove(clubId);
+    }
+  }
+
   factory Student.fromJson(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -45,11 +64,13 @@ class Student {
   }
 
   Map<String, dynamic> toJson() {
+    clubs ??= [];
+    likedPosts ??= [];
     return {
       "name": name,
       "email": email,
-      if (clubs != null) "clubs": clubs,
-      if (likedPosts != null) "liked_posts": likedPosts,
+      "clubs": clubs,
+      "liked_posts": likedPosts,
     };
   }
 }

@@ -97,7 +97,27 @@ class _ClubDetailsState extends State<ClubDetails> {
                     ),
                     const Spacer(),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (!isMember && !isOwner) {
+                            widget.club.addMember(studentProvider.student!.id!);
+                            await clubRef.update(widget.club.toJson());
+                            await studentProvider
+                                .updateStudentClubs(widget.club.id!);
+                            setState(() {
+                              isMember = true;
+                            });
+                          } else if (isMember) {
+                            widget.club
+                                .removeMember(studentProvider.student!.id!);
+                            await clubRef.update(widget.club.toJson());
+                            await studentProvider
+                                .removeStudentClub(widget.club.id!);
+
+                            setState(() {
+                              isMember = false;
+                            });
+                          }
+                        },
                         child: Text(
                           joinLeaveOrOwner,
                           style: TextStyle(color: textColor),
@@ -116,21 +136,18 @@ class _ClubDetailsState extends State<ClubDetails> {
                         style: Theme.of(context).textTheme.headline1,
                       ),
                       StreamBuilder(
-                          stream: clubRef.snapshots(),
-                          builder: ((context, snapshot) {
-                            if (snapshot.hasData) {
-                              List<String> posts = List<String>.from(
-                                  snapshot.data!.get("posts"));
+                        stream: clubRef.snapshots(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<String> posts =
+                                List<String>.from(snapshot.data!.get("posts"));
 
-                              return Text(posts.length.toString());
-                            } else {
-                              return const Text('Loading');
-                            }
-                          }))
-                      // Text(
-                      //   widget.club.posts!.length.toString(),
-                      //   style: Theme.of(context).textTheme.bodyText2,
-                      // ),
+                            return Text(posts.length.toString());
+                          } else {
+                            return const Text('Loading');
+                          }
+                        }),
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -240,10 +257,7 @@ class _ClubDetailsState extends State<ClubDetails> {
                       var result = await postsRef.add(newPost);
                       widget.club.addPost(result.id);
 
-                      print(widget.club.posts);
-                      clubRef.update(widget.club.toJson());
-
-                      print(result.id);
+                      await clubRef.update(widget.club.toJson());
                     } catch (e) {
                       print(e);
                     }

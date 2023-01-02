@@ -5,38 +5,48 @@ import 'student.dart';
 
 class StudentProvider extends ChangeNotifier {
   Student? _student;
+  String email = FirebaseAuth.instance.currentUser!.email!;
+  final ref = FirebaseFirestore.instance.collection("users").withConverter(
+        fromFirestore: Student.fromJson,
+        toFirestore: (Student student, _) => student.toJson(),
+      );
 
-  updateStudent(Student student) {
-    _student = student;
+  addUser(Student student) async {
+    try {
+      _student = student;
+      await ref.add(student);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  updateStudentClubs(String clubId) async {
+    _student!.addClub(clubId);
+    await ref.doc(_student!.id).update(_student!.toJson());
+    notifyListeners();
+  }
+
+  removeStudentClub(String clubId) async {
+    _student!.removeClub(clubId);
+    await ref.doc(_student!.id).update(_student!.toJson());
+    notifyListeners();
+  }
+
+  updateStudent() async {
+    print('updateing');
+    print(_student!.id);
+    print(_student!.clubs);
+    await ref.doc(_student!.id).update(_student!.toJson());
+    notifyListeners();
   }
 
   Student? get student => _student;
 
   fetchStudent() async {
-    String email = FirebaseAuth.instance.currentUser!.email!;
-    final ref = FirebaseFirestore.instance.collection("users").withConverter(
-          fromFirestore: Student.fromJson,
-          toFirestore: (Student student, _) => student.toJson(),
-        );
     final docSnap = await ref.where('email', isEqualTo: email).get();
     final student = docSnap; // Convert to City object
-    print(email);
-    print(student.docs[0].data());
-    // TODO: add loading
+
     _student = student.docs[0].data();
     notifyListeners();
-
-    // QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-    //     .instance
-    //     .collection('users')
-    //     .where("email", isEqualTo: email)
-    //     .get();
-    // print(snapshot);
-
-    // if (snapshot.size > 0) {
-    //   _student = Student.fromJson(snapshot.docs[0], SnapshotOptions());
-    // }
   }
-
-  getStudentId() {}
 }

@@ -4,6 +4,7 @@ class Student {
   String? imageUrl;
   late String name;
   late String email;
+  String? id;
   List<String>? clubs = [];
   List<String>? likedPosts = [];
 
@@ -16,19 +17,27 @@ class Student {
       required this.email,
       this.imageUrl,
       this.clubs,
-      this.likedPosts});
+      this.likedPosts,
+      this.id});
 
   factory Student.fromJson(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
+
     return Student(
-      name: data?['name'],
-      email: data?['email'],
-      // clubs: data?['clubs'] as List<String>,
-      // likedPosts: data?['liked_posts'] as List<String>,
-    );
+        name: data?['name'],
+        email: data?['email'],
+        clubs: data?['clubs'] is Iterable
+            ? List<String>.from(data?['clubs'])
+            : null,
+        likedPosts: data?['liked_posts'] is Iterable
+            ? List<String>.from(data?['liked_posts'])
+            : null,
+        id: snapshot.id
+        // likedPosts: data?['liked_posts'] as List<String>,
+        );
     // name = json['name'] as String;
     // email = json['email'] as String;
     // clubs = json['clubs'] as List<String>;
@@ -39,8 +48,8 @@ class Student {
     return {
       "name": name,
       "email": email,
-      "clubs": clubs,
-      "liked_posts": likedPosts,
+      if (clubs != null) "clubs": clubs,
+      if (likedPosts != null) "liked_posts": likedPosts,
     };
   }
 }

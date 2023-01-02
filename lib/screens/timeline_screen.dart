@@ -12,24 +12,30 @@ class TimeLineScreen extends StatelessWidget {
       title: 'Chess Tournament',
       announcement:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
-      authorId: 0,
-      clubId: 0,
+      authorId: '0',
+      clubId: '0',
+      clubName: 'Club Name',
+      authorName: 'Youssef Darahem',
       dateTime: DateTime.now(),
     ),
     Post(
       title: 'Football Match',
       announcement:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
-      authorId: 0,
-      clubId: 0,
+      authorId: '0',
+      clubId: '0',
+      clubName: 'Club Name',
+      authorName: 'Youssef Darahem',
       dateTime: DateTime.now(),
     ),
     Post(
       title: 'Poem Concert',
       announcement:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing commodo elit at imperdiet dui. Tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla. Diam vel quam elementum pulvinar etiam non quam lacus suspendisse.',
-      authorId: 0,
-      clubId: 0,
+      authorId: '0',
+      clubId: '0',
+      clubName: 'Club Name',
+      authorName: 'Youssef Darahem',
       dateTime: DateTime.now(),
     ),
   ];
@@ -56,7 +62,7 @@ class TimeLineScreen extends StatelessWidget {
         announcement: post.announcement,
         clubName: 'Club Name',
         author: 'Youssef Darahem',
-        dateTime: post.dateTime,
+        dateTime: post.dateTime!,
         postState: post.state,
       );
     }).toList();

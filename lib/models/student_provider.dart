@@ -25,6 +25,7 @@ class StudentProvider extends ChangeNotifier {
     // TODO: add loading
     _student = student.docs[0].data();
     notifyListeners();
+
     // QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
     //     .instance
     //     .collection('users')
@@ -36,4 +37,6 @@ class StudentProvider extends ChangeNotifier {
     //   _student = Student.fromJson(snapshot.docs[0], SnapshotOptions());
     // }
   }
+
+  getStudentId() {}
 }

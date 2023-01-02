@@ -51,47 +51,44 @@ class _PostWidgetState extends State<PostWidget> {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         // constraints: const BoxConstraints(minHeight: 250, maxHeight: 400),
-        height: 300,
+        height: 280,
         child: Card(
           elevation: 10,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            widget.title,
-                            style: header,
-                          ),
-                          Text(
-                            DateFormat('dd/MM/yy - kk:mm')
-                                .format(widget.dateTime),
-                            style: subHeader,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            widget.clubName,
-                            style: header,
-                          ),
-                          Text(
-                            widget.author,
-                            style: subHeader,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          widget.title,
+                          style: header,
+                        ),
+                        Text(
+                          DateFormat('dd/MM/yy - kk:mm')
+                              .format(widget.dateTime),
+                          style: subHeader,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.clubName,
+                          style: header,
+                        ),
+                        Text(
+                          widget.author,
+                          style: subHeader,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               const Divider(
@@ -114,43 +111,41 @@ class _PostWidgetState extends State<PostWidget> {
               const Divider(
                 thickness: 2,
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (state == PostState.liked) {
-                              state = PostState.neither;
-                            } else {
-                              state = PostState.liked;
-                            }
-                          });
-                        },
-                        icon: like,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (state == PostState.disliked) {
-                              state = PostState.neither;
-                            } else {
-                              state = PostState.disliked;
-                            }
-                          });
-                        },
-                        icon: dislike,
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.share),
-                      ),
-                    ],
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (state == PostState.liked) {
+                            state = PostState.neither;
+                          } else {
+                            state = PostState.liked;
+                          }
+                        });
+                      },
+                      icon: like,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (state == PostState.disliked) {
+                            state = PostState.neither;
+                          } else {
+                            state = PostState.disliked;
+                          }
+                        });
+                      },
+                      icon: dislike,
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.share),
+                    ),
+                  ],
                 ),
               ),
             ],

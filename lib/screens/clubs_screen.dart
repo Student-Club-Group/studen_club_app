@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:student_club/services/firestore_cloud.dart';
 
 import '../models/club.dart';
 import 'add_club_screen.dart';
@@ -17,25 +16,14 @@ class ClubsScreen extends StatefulWidget {
 
 class _ClubsScreenState extends State<ClubsScreen> {
   TextEditingController editingController = TextEditingController();
-  // static List<Club> clubs = [
-  //   Club(
-  //     name: 'Chess club',
-  //     description: 'in this club we are what we pla pla pla ',
-  //   ),
-  //   Club(
-  //     name: 'Football club',
-  //     description: 'in this club we are what we pla pla pla ',
-  //   ),
-  //   Club(
-  //     name: 'Poem club',
-  //     description: 'in this club we are what we pla pla pla ',
-  //   )
-  // ];
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference _clubsRef =
-        FirebaseFirestore.instance.collection('clubs');
+    final CollectionReference<Club> clubsRef =
+        FirebaseFirestore.instance.collection('clubs').withConverter(
+              fromFirestore: Club.fromJson,
+              toFirestore: (Club club, _) => club.toJson(),
+            );
     // final student = ModalRoute.of(context)!.settings.arguments as Student;
     return Column(
       children: [
@@ -43,8 +31,13 @@ class _ClubsScreenState extends State<ClubsScreen> {
           title: 'Clubs',
           trailing: IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const AddClubScreen())));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: ((context) => AddClubScreen(
+                        clubRef: clubsRef,
+                      )),
+                ),
+              );
             },
             icon: const Icon(
               Icons.add,
@@ -65,26 +58,25 @@ class _ClubsScreenState extends State<ClubsScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(30.0)))),
           ),
         ),
-        Expanded(
-          child: StreamBuilder(
-            stream: _clubsRef.snapshots(),
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
+        StreamBuilder(
+          stream: clubsRef.snapshots(),
+          builder: ((context, snapshot) {
+            if (snapshot.hasData) {
+              return Expanded(
+                child: ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        print(snapshot.data!.docs[index]);
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) {
-                        //       Club club =
-                        //           Club.fromJson(snapshot.data!.docs[index]);
-                        //       return ClubDetails(club: club);
-                        //     },
-                        //   ),
-                        // );
+                        Club club = snapshot.data!.docs[index].data();
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ClubDetails(club: club);
+                            },
+                          ),
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -95,8 +87,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                               child: Icon(Icons.group_sharp),
                             ),
                             title: Text(snapshot.data!.docs[index]["name"]),
-                            subtitle:
-                                Text(snapshot.data!.docs[index]["description"]),
+                            subtitle: const Text('Establish Date : 2/1/2023'),
                             trailing: TextButton(
                                 onPressed: () {}, child: const Text('Join')),
                           ),
@@ -104,41 +95,12 @@ class _ClubsScreenState extends State<ClubsScreen> {
                       ),
                     );
                   },
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            }),
-          ),
-          // child: ListView.builder(
-          //   itemCount: clubs.length,
-          //   itemBuilder: (context, index) {
-          //     return InkWell(
-          //       onTap: () {
-          //         Navigator.of(context).push(
-          //           MaterialPageRoute(
-          //             builder: (context) => ClubDetails(club: clubs[index]),
-          //           ),
-          //         );
-          //       },
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(
-          //             horizontal: 8.0, vertical: 4.0),
-          //         child: Card(
-          //           child: ListTile(
-          //             leading: const CircleAvatar(
-          //               child: Icon(Icons.group_sharp),
-          //             ),
-          //             title: Text(clubs[index].name),
-          //             subtitle: Text(clubs[index].description),
-          //             trailing: TextButton(
-          //                 onPressed: () {}, child: const Text('Join')),
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
+                ),
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
         ),
       ],
     );

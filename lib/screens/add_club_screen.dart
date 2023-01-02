@@ -1,13 +1,18 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:student_club/models/club.dart';
+import 'package:student_club/models/student_provider.dart';
 
 import '../widgets/my_app_bar.dart';
 
 class AddClubScreen extends StatefulWidget {
-  const AddClubScreen({super.key});
+  final CollectionReference<Club> clubRef;
+  const AddClubScreen({super.key, required this.clubRef});
 
   static List<DropdownMenuItem> catagories = const [
     DropdownMenuItem(
@@ -64,6 +69,14 @@ class _AddClubScreenState extends State<AddClubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    StudentProvider _studentProvider = Provider.of<StudentProvider>(context);
+    if (_studentProvider.student == null) {
+      _studentProvider.fetchStudent();
+    }
+    TextEditingController clubNameController = TextEditingController();
+    TextEditingController clubDescriptionController = TextEditingController();
+    String clubType = '';
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -135,6 +148,7 @@ class _AddClubScreenState extends State<AddClubScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextFormField(
+                        controller: clubNameController,
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
                           labelText: 'Enter The Club Name',
@@ -146,12 +160,15 @@ class _AddClubScreenState extends State<AddClubScreen> {
                       DropdownButtonFormField(
                         hint: const Text('Select Category'),
                         items: AddClubScreen.catagories,
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          clubType = value;
+                        },
                       ),
                       const SizedBox(
                         height: 10.0,
                       ),
                       TextFormField(
+                        controller: clubDescriptionController,
                         keyboardType: TextInputType.multiline,
                         minLines: 1,
                         maxLines: 5,
@@ -167,7 +184,28 @@ class _AddClubScreenState extends State<AddClubScreen> {
                         // style: ButtonStyle(
                         //     backgroundColor: MaterialStateProperty.all(
                         //         Colors.blueGrey.shade600)),
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () {
+                          if (clubNameController.text.isNotEmpty &&
+                              clubDescriptionController.text.isNotEmpty) {
+                            Club newClub = Club(
+                              name: clubNameController.text,
+                              description: clubDescriptionController.text,
+                              type: ClubType.values.firstWhere((type) =>
+                                  type.name.toString() ==
+                                  clubType.toLowerCase()),
+                              owners: [_studentProvider.student!.id!],
+                              members: [],
+                              posts: [],
+                            );
+                            print(newClub);
+                            try {
+                              widget.clubRef.add(newClub);
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                          Navigator.of(context).pop();
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

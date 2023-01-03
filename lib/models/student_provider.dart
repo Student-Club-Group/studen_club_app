@@ -12,6 +12,9 @@ class StudentProvider extends ChangeNotifier {
       );
 
   addUser(Student student) async {
+    if (_student == null) {
+      return;
+    }
     try {
       _student = student;
       await ref.add(student);

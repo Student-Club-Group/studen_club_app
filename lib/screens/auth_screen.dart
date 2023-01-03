@@ -17,7 +17,7 @@ class AuthScreen extends StatelessWidget {
           if (snapshot.hasData) {
             // Student student = Student(name: snapshot.data!.email!);
             // provider.updateStudent(student);
-
+            // FirebaseAuth.instance.signOut();
             return const HomePage();
           } else {
             return const RegisterScreen();

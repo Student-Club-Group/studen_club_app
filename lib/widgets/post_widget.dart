@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:intl/intl.dart';
 import 'package:student_club/models/post_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostWidget extends StatefulWidget {
   final String title;
@@ -26,6 +27,21 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  Future share() async {
+    String body = widget.title + widget.announcement;
+    // String twitterUrl = "twitter.com/intent/tweet?text=$body";
+    String twitterUrl = "facebook.com";
+    // String path = "/intent/tweet?text=$body";
+    String path = "/sharer/sharer.php?t=$body";
+    final Uri uri = Uri(scheme: "https", host: twitterUrl, path: path);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        // mode: LaunchMode.externalApplication,
+      );
+    }
+  }
+
   PostState state = PostState.neither;
   @override
   Widget build(BuildContext context) {
@@ -142,7 +158,13 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        try {
+                          share();
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
                       icon: const Icon(Icons.share),
                     ),
                   ],

@@ -54,23 +54,23 @@ class _ClubsScreenState extends State<ClubsScreen> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-          child: TextField(
-            onChanged: (value) {},
-            controller: editingController,
-            decoration: const InputDecoration(
-              labelText: "Search",
-              hintText: "Search",
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(30.0),
-                ),
-              ),
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        //   child: TextField(
+        //     onChanged: (value) {},
+        //     controller: editingController,
+        //     decoration: const InputDecoration(
+        //       labelText: "Search",
+        //       hintText: "Search",
+        //       prefixIcon: Icon(Icons.search),
+        //       border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.all(
+        //           Radius.circular(30.0),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         StreamBuilder(
           stream: clubsRef.snapshots(),
           builder: ((context, snapshot) {
@@ -142,7 +142,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                                 child: Icon(Icons.group_sharp),
                               ),
                               title: Text(snapshot.data!.docs[index]["name"]),
-                              subtitle: const Text('Establish Date : 2/1/2023'),
+                              subtitle: const Text('Establish Date : 3/1/2023'),
                               trailing: trailing,
                             ),
                           ),

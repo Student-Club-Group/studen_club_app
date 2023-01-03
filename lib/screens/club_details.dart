@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_club/models/post_state.dart';
@@ -23,6 +24,25 @@ class ClubDetails extends StatefulWidget {
 class _ClubDetailsState extends State<ClubDetails> {
   bool isOwner = false;
   bool isMember = false;
+  String? imageUrl;
+
+  Future<void> getDownloadURL(String fileName) async {
+    try {
+      var getUrl = await FirebaseStorage.instance
+          .ref()
+          .child('clubs/$fileName')
+          .getDownloadURL();
+      setState(() {
+        imageUrl = getUrl;
+      });
+    } catch (e) {
+      setState(() {
+        imageUrl = "";
+      });
+    }
+  }
+  // final FirebaseStorage _storage = FirebaseStorage.instance.ref('clubs/');
+
   final postsRef = FirebaseFirestore.instance.collection('posts').withConverter(
         fromFirestore: Post.fromJson,
         toFirestore: (Post post, _) => post.toJson(),
@@ -30,12 +50,33 @@ class _ClubDetailsState extends State<ClubDetails> {
 
   @override
   Widget build(BuildContext context) {
+    Widget getImageAvatar() {
+      if (imageUrl == null) {
+        return const CircleAvatar(
+          radius: 50,
+          child: CircularProgressIndicator(),
+        );
+      } else if (imageUrl == "") {
+        return const CircleAvatar(
+          radius: 50,
+          child: Text('No Image'),
+        );
+      } else {
+        return CircleAvatar(
+          radius: 50,
+          backgroundImage: NetworkImage(imageUrl!),
+        );
+      }
+    }
+
     final clubRef =
         FirebaseFirestore.instance.collection('clubs').doc(widget.club.id);
-    String joinLeaveOrOwner = 'Request Join';
+
+    String joinLeaveOrOwner = 'Join';
     Color textColor = Colors.blueGrey;
 
     StudentProvider studentProvider = Provider.of<StudentProvider>(context);
+
     if (studentProvider.student == null) {
       studentProvider.fetchStudent();
     } else {
@@ -53,6 +94,9 @@ class _ClubDetailsState extends State<ClubDetails> {
           isMember = true;
         });
       }
+    }
+    if (imageUrl == null) {
+      getDownloadURL(widget.club.id!);
     }
 
     return SafeArea(
@@ -75,7 +119,7 @@ class _ClubDetailsState extends State<ClubDetails> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    const CircleAvatar(radius: 50, child: Text('No Image')),
+                    getImageAvatar(),
                     const SizedBox(
                       width: 20,
                     ),
@@ -87,12 +131,20 @@ class _ClubDetailsState extends State<ClubDetails> {
                           style: Theme.of(context).textTheme.headline1,
                         ),
                         Text(
-                          '1/1/2023',
+                          widget.club.type!.name.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1!
                               .copyWith(color: Colors.blueGrey),
                         ),
+
+                        // Text(
+                        //   '3/1/2023',
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .bodyText1!
+                        //       .copyWith(color: Colors.blueGrey),
+                        // ),
                       ],
                     ),
                     const Spacer(),

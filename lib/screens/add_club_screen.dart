@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,14 @@ import 'package:student_club/models/club.dart';
 import 'package:student_club/models/student_provider.dart';
 
 import '../widgets/my_app_bar.dart';
+
+enum ImageStatus {
+  uploading,
+  uploaded,
+  notSelected,
+  selected,
+  failed,
+}
 
 class AddClubScreen extends StatefulWidget {
   final CollectionReference<Club> clubRef;
@@ -28,11 +37,11 @@ class AddClubScreen extends StatefulWidget {
       child: Text('Media'),
     ),
     DropdownMenuItem(
-      value: 'Theatre And Art',
+      value: 'TheatreAndArt',
       child: Text('Theatre And Art'),
     ),
     DropdownMenuItem(
-      value: 'Religious And Cultural',
+      value: 'ReligiousAndCultural',
       child: Text('Religious And Cultural'),
     ),
     DropdownMenuItem(
@@ -50,20 +59,48 @@ class AddClubScreen extends StatefulWidget {
 }
 
 class _AddClubScreenState extends State<AddClubScreen> {
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
   File? _clubImage;
+  ImageStatus imageStatus = ImageStatus.notSelected;
 
   Future _pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       File? img = File(image.path);
+
       setState(() {
         _clubImage = img;
+        imageStatus = ImageStatus.selected;
         // Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
       print(e);
       Navigator.of(context).pop();
+    }
+  }
+
+  uploadImage(String fileName) async {
+    setState(() {
+      imageStatus = ImageStatus.uploading;
+    });
+
+    if (_clubImage != null) {
+      print('entered');
+      print(fileName);
+      try {
+        await storage.ref().child('clubs/$fileName').putFile(_clubImage!,
+            firebase_storage.SettableMetadata(contentType: "image/png"));
+        setState(() {
+          imageStatus = ImageStatus.uploaded;
+        });
+      } catch (e) {
+        setState(() {
+          imageStatus = ImageStatus.failed;
+        });
+        print(e);
+      }
     }
   }
 
@@ -104,18 +141,19 @@ class _AddClubScreenState extends State<AddClubScreen> {
                     color: Colors.grey.shade200,
                   ),
                   child: Center(
-                      child: _clubImage == null
-                          ? Text(
-                              'No Image selected',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(color: Colors.black),
-                            )
-                          : CircleAvatar(
-                              backgroundImage: FileImage(_clubImage!),
-                              radius: 200.0,
-                            )),
+                    child: _clubImage == null
+                        ? Text(
+                            'No Image selected',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: Colors.black),
+                          )
+                        : CircleAvatar(
+                            backgroundImage: FileImage(_clubImage!),
+                            radius: 200.0,
+                          ),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -181,9 +219,6 @@ class _AddClubScreenState extends State<AddClubScreen> {
                         height: 120,
                       ),
                       TextButton(
-                        // style: ButtonStyle(
-                        //     backgroundColor: MaterialStateProperty.all(
-                        //         Colors.blueGrey.shade600)),
                         onPressed: () async {
                           if (clubNameController.text.isNotEmpty &&
                               clubDescriptionController.text.isNotEmpty) {
@@ -197,11 +232,12 @@ class _AddClubScreenState extends State<AddClubScreen> {
                               members: [],
                               posts: [],
                             );
-                            print(newClub);
+
                             try {
                               var result = await widget.clubRef.add(newClub);
                               studentProvider.student!.addClub(result.id);
                               await studentProvider.updateStudent();
+                              uploadImage(result.id);
                             } catch (e) {
                               print(e);
                             }
@@ -211,7 +247,9 @@ class _AddClubScreenState extends State<AddClubScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.create),
+                            imageStatus == ImageStatus.uploading
+                                ? const Icon(Icons.circle_outlined)
+                                : const Icon(Icons.create),
                             const SizedBox(
                               width: 10.0,
                             ),

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_club/models/post_provider.dart';
 
 import 'models/student_provider.dart';
 import 'screens/auth_screen.dart';
@@ -10,6 +11,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => StudentProvider()),
+    ChangeNotifierProvider(create: (context) => PostProvider()),
   ], child: const MyApp()));
 }
 
